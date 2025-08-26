@@ -11,5 +11,11 @@ How to use it:
 
 How it works:
 1. The arduino script outputs BUTTON_PRESSED to COM3 when the button is pressed
-2. The translator (server) watches COM3 for the BUTTON_PRESSED message. When it sees it, it runs PingIntent on the Alexa skill
+2. The translator (server) watches COM3 for the BUTTON_1_PRESSED message. When it sees it, it runs PingIntent on the Alexa skill
 3. Alexa returns "Pong!" to the server, which prints it to the console.
+
+Additional:
+
+There is also a BUTTON_2_PRESSED message that runs ArduinoInsertIntent on the Alexa Skill with a slot.
+
+There is also a POT_VALUE message that runs ArduinoInsertIntent with a slot passed from the arduino (a potentiometer).
