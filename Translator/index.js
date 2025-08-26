@@ -50,7 +50,7 @@ function buildRequest(intentName = null, slots = {}) {
 }
 
 parser.on('data', line => {
-  if (line.trim() !== 'BUTTON_PRESSED') return;
+  if (line.trim() !== 'BUTTON_1_PRESSED') return;
 
   const mockRequest = {
     version: '1.0',
@@ -60,7 +60,7 @@ parser.on('data', line => {
       requestId: 'mock-request-id',
       locale: 'en-US',
       timestamp: new Date().toISOString(),
-      intent: { name: 'PingIntent', slots: {} }
+      intent: { name: 'PingIntent'}
     }
   };
 
@@ -71,6 +71,55 @@ parser.on('data', line => {
   });
 });
 
+parser.on('data', line => {
+  if (line.trim() !== 'BUTTON_2_PRESSED') return;
+
+  const mockRequest = {
+    version: '1.0',
+    session: { new: true, sessionId: 'mock-session' },
+    request: {
+      type: 'IntentRequest',
+      requestId: 'mock-request-id',
+      locale: 'en-US',
+      timestamp: new Date().toISOString(),
+      intent: { name: 'ArduinoInsertIntent', slots: {item: {value: "screwdriver"}} }
+    }
+  };
+
+  handler(mockRequest, {}, (err, res) => {
+    if (err) return console.error(err);
+    const speech = res?.response?.outputSpeech?.text || res?.response?.outputSpeech?.ssml || '';
+    console.log(speech.replace(/^<speak>/i, '').replace(/<\/speak>$/i, ''));
+  });
+});
+
+//Takes input from a potentiometer
+parser.on('data', line => {
+
+    //Passing variables to the server
+  if (!line.trim().startsWith('POT_VALUE')) return;
+
+  var str = line.trim();
+  str = str.substring(str.indexOf(" ") + 1); 
+
+  const mockRequest = {
+    version: '1.0',
+    session: { new: true, sessionId: 'mock-session' },
+    request: {
+      type: 'IntentRequest',
+      requestId: 'mock-request-id',
+      locale: 'en-US',
+      timestamp: new Date().toISOString(),
+      intent: { name: 'ArduinoInsertIntent', slots: {item: {value: str}} }
+    }
+  };
+
+  handler(mockRequest, {}, (err, res) => {
+    if (err) return console.error(err);
+    const speech = res?.response?.outputSpeech?.text || res?.response?.outputSpeech?.ssml || '';
+    console.log(speech.replace(/^<speak>/i, '').replace(/<\/speak>$/i, ''));
+  });
+});
 
 //Run server
 const PORT = 3000;
